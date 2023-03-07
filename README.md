@@ -2,6 +2,12 @@
 
 <h2  align="center">Multi-platform application for representing sequence similarity and detecting recombination</h2>
 
+<table>
+<tr>
+<th align="left">
+<img width="441" height="1">
+<p> 
+<small>
 <details open>
   <summary>Table of Contents</summary>
   <ol>
@@ -29,8 +35,19 @@
     </li>
   </ol>
 </details>
-
-
+</small>
+</p>
+</th>
+<th align="center">
+<img width="441" height="1">
+<p> 
+<small>
+<img src="https://github.com/Stephane-S/Simplot_PlusPlus/blob/master/Docs/images/Simplot_example.png"  alt="1" width = 519 height = 286 >
+</small>
+</p>
+</th>
+</tr>
+</table>
 
 # About the project
 
