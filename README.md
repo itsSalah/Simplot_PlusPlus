@@ -42,7 +42,7 @@
 <img width="441" height="1">
 <p> 
 <small>
-<img src="https://github.com/Stephane-S/Simplot_PlusPlus/blob/master/Docs/images/Simplot_example.png"  alt="1" width = 519 height = 286 >
+<img src="https://github.com/Stephane-S/Simplot_PlusPlus/blob/master/Docs/images/Simplot_ex_svg.svg"  alt="1" width = 519 height = 286 >
 </small>
 </p>
 </th>
