@@ -34,14 +34,7 @@
 
 # About the project
 
-Simplot++ is an open-source multi-platform application designed by Stéphane Samson, Étienne Lord and Vladimir Makarenkov (Université du Québec à Montréal). It is implemented in Python. SimPlot++ produces publication-ready SimPlot and 
-
-
-
-
-
-
-plots using 43 nucleotide and 20 amino acid distance models. Intergenic and intragenic recombination events can be identified using Phi, χ2, NSS and Proportion tests. 
+Simplot++ is an open-source multi-platform application designed by Stéphane Samson, Étienne Lord and Vladimir Makarenkov (Université du Québec à Montréal). It is implemented in Python. SimPlot++ produces publication-ready SimPlot and plots using 43 nucleotide and 20 amino acid distance models. Intergenic and intragenic recombination events can be identified using Phi, χ2, NSS and Proportion tests. 
 Simplot++ also generates and analyzes interactive sequence similarity networks, while supporting multi-processing and providing distance calculability diagnostics.
 
 SimPlot++ offers the following features:
@@ -54,7 +47,13 @@ SimPlot++ offers the following features:
 - Run Phi, NSS and χ2 statistical tests to detect recombination
 - Provide distance calculability diagnostics
 
-**Reference:** [Samson, S., Lord, É., & Makarenkov, V. (2022). SimPlot++: a Python application for representing sequence similarity and detecting recombination. arXiv preprint arXiv:2112.09755.](https://arxiv.org/abs/2112.09755)
+**Reference:** [S Samson, É Lord, V Makarenkov (2022), SimPlot++: a Python application for representing sequence similarity and detecting recombination.
+Bioinformatics 38 (11), 3118–3120](https://academic.oup.com/bioinformatics/article-abstract/38/11/3118/6572334?redirectedFrom=fulltext)
+
+[![alt text][1]][2]
+
+[1]: https://github.com/Stephane-S/Simplot_PlusPlus/blob/master/Docs/images/PDF_icon.svg
+[2]: https://arxiv.org/ftp/arxiv/papers/2112/2112.09755.pdf
 
 # Installation
 ## Windows version
@@ -165,7 +164,7 @@ By adjusting the minimum similarity threshold required to show each of the edge 
 
 Datatables allows the user to view the most important similarity regions between the network nodes (i.e. MSA sequences or sub-sequences). The results of the Proportion test are also available in a datatable (discussed in more details in the statistical methods section).
 
-The graph data and visualization can be saved in an HTML file.
+The graph data and visualization can be saved in an HTML file. The graph itself can be saved as either a .png or .svg (the option is in the user preference page) directly from the toolbox in the HTML file.
 
 ### Similarity network output example
 
