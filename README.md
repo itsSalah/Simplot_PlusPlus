@@ -30,8 +30,54 @@
   </ol>
 </details>
 
+<table>
+<tr>
+<th align="left">
+<img width="441" height="1">
+<p> 
+<small>
+<details open>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About the project</a>
+    </li>
+    <li>
+      <a href="#Installation">Installation</a>
+      <ul>
+        <li><a href="#Windows-version">Windows version</a></li>
+        <li><a href="#Linux-UNIX-and-Mac-OS-versions">Linux/UNIX and Mac OS versions</a></li>
+      </ul>
+    </li>
+    <li> Available analyses</li>
+      <ul>
+        <li><a href="#Group-creation">Group creation</a></li>
+        <li><a href="#SimPlot-analysis">SimPlot analysis</a></li>
+        <li><a href="#Similarity-networks">Similarity networks</a></li>
+        <li><a href="#BootScan-analysis">BootScan analysis</a></li>
+        <li><a href="#Findsites">Findsites</a></li>
+        <li><a href="#Detection-of-recombination">Detection of recombination</a></li>
+      </ul>
+    <li>
+      <a href="#contact">Contact</a>
+    </li>
+  </ol>
+</details>
+</small>
+</p>
+</th>
+<th align="center">
+<img width="441" height="1">
+<p> 
+<small>
+<img src="https://github.com/Stephane-S/Simplot_PlusPlus/blob/master/Docs/images/Simplot_example.png"  alt="1" width = 519 height = 286 >
+</small>
+</p>
+</th>
+</tr>
+</table>
 
-
+![Simplot output example](https://github.com/Stephane-S/Simplot_PlusPlus/blob/master/Docs/images/Simplot_example.png)
 # About the project
 
 Simplot++ is an open-source multi-platform application designed by Stéphane Samson, Étienne Lord and Vladimir Makarenkov (Université du Québec à Montréal). It is implemented in Python. SimPlot++ produces publication-ready SimPlot and plots using 43 nucleotide and 20 amino acid distance models. Intergenic and intragenic recombination events can be identified using Phi, χ2, NSS and Proportion tests. 
