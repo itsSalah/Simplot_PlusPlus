@@ -1346,7 +1346,7 @@ class MainWindow:
             stacked_temp_df = pd.DataFrame(temp_df.stack(dropna=False), columns=['similarity']).reset_index()
             stacked_temp_df.insert(1, 'refseq', key)
 
-            df = df.append(stacked_temp_df, ignore_index=False)
+            df = df.concat(stacked_temp_df, ignore_index=False)
 
             df['status'] = np.where(
                 df['similarity'] >= 0, "distance calculated", np.where(
@@ -2146,7 +2146,7 @@ class MainWindow:
         self.app_settings.checkBox_save_qual_report.setChecked(pref_dict["auto_save_sp_qual"])
         self.app_settings.checkBox_show_x_grid.setChecked(pref_dict["X_grid_lines"])
         self.app_settings.checkBox_show_y_grid.setChecked(pref_dict["Y_grid_lines"])
-        self.app_settings.spinBox_consensus_threshold.setValue(threshold_value)
+        self.app_settings.spinBox_consensus_threshold.setValue(int(threshold_value))
         self.app_settings.checkBox_normalize_simplot.setChecked(pref_dict["normalize_simplot"])
         self.app_settings.spinBox_nprocs.setValue(pref_dict["nprocs"])
         self.app_settings.spinBox_nprocs.setMaximum(max_nprocs)

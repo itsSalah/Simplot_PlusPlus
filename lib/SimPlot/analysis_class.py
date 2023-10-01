@@ -184,7 +184,7 @@ class SimplotAnalysis:
                         consensus_seq = consensus_seq + seq[pos]
 
                 consensus_dict[group_name] = str(consensus_seq)
-                progress_bar.setValue(i / len(group_dict) * 100)
+                progress_bar.setValue(int(i / len(group_dict) * 100))
                 i += 1
                 #todo add threshold
         return consensus_dict
