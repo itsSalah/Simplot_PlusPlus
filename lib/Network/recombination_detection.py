@@ -45,7 +45,7 @@ class RecombinationDetection:
                 #  filter out sub_mean distances (pressure for relatively high-similarity detection)
                 mean = data.mean()
                 filtered_series = data.where(data>mean)
-                for idx, val in filtered_series.iteritems():
+                for idx, val in filtered_series.items():
                     if val <= mean_sim_dict[idx]:
                         filtered_series[idx]= np.nan
 

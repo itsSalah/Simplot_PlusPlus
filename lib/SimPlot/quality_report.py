@@ -47,7 +47,7 @@ class quality_report_generator:
         tab2 = TabPanel(child=threshold_breach_plot, title="Gap threshold cutoff")
         plot1 = (Tabs(tabs=[tab1, tab2]))
 
-        black_line0 = Div(text="<hr/>", style={'width': '100%', 'text-align': 'left', 'margin-left': '0'})
+        black_line0 = Div(text="<hr/>", styles={'width': '100%', 'text-align': 'left', 'margin-left': '0'})
 
         tab3 = TabPanel(child=missing_data_plot, title="Data completedness")
         tab4 = TabPanel(child=distance_plot, title="Distance plot")
@@ -70,7 +70,7 @@ class quality_report_generator:
         return ordered_pos_list
 
     def create_distance_heatmap(self, source, ordered_pos_list, ids_list):
-        p = figure(plot_width=900, plot_height=500, title="Sequence similarity heatmap per window over whole sequence",
+        p = figure(width=900, height=500, title="Sequence similarity heatmap per window over whole sequence",
                    x_range=ordered_pos_list, y_range=ids_list, toolbar_location="below",
                    toolbar_sticky=False)
 
@@ -152,7 +152,7 @@ class quality_report_generator:
         "threshold": "#FFA600"
         }
 
-        p = figure(plot_width=900, plot_height=500, title="Distance calculability per window over whole sequence",
+        p = figure(width=900, height=500, title="Distance calculability per window over whole sequence",
                    x_range=ordered_pos_list, y_range=first_use_ids_list) #ids_list
 
         p.add_layout(Legend(), "right")
@@ -208,7 +208,7 @@ class quality_report_generator:
         source = ColumnDataSource(df)
         mapper = LinearColorMapper(palette=("#ffa600", "#003f5c"), low=0, high=1)
 
-        p = figure(plot_width=800, plot_height=300, title="Gap threshold cutoff per window over whole sequence",
+        p = figure(width=800, height=300, title="Gap threshold cutoff per window over whole sequence",
                    x_range=list(gap_threshold_df.index), y_range=list(reversed(gap_threshold_df.columns)), #list(gap_threshold_df.index)
                    toolbar_location="below", toolbar_sticky=False, x_axis_location="above")
 
@@ -259,7 +259,7 @@ class quality_report_generator:
         #bokeh plot creation
         mapper = LinearColorMapper(palette=cc.fire, low=0, high=100)
 
-        p = figure(plot_width=800, plot_height=300, title="Gap frequency per window over whole sequence",
+        p = figure(width=800, height=300, title="Gap frequency per window over whole sequence",
                    x_range=list(gap_report_df.index), y_range=list(reversed(gap_report_df.columns)),
                    toolbar_location="below", toolbar_sticky=False, x_axis_location="above")
 
@@ -271,9 +271,9 @@ class quality_report_generator:
                              formatter=PrintfTickFormatter(format="%d%%"), label_standoff=6, location=(0,0))
 
         # #color bar title
-        # plot_height = 300
-        # plot_width = 500
-        # color_bar_height = plot_height + 11
+        # height = 300
+        # width = 500
+        # color_bar_height = height + 11
         # color_bar_width = 180
         # color_bar_plot = figure(title="My color bar title", title_location="right",
         #                         height=color_bar_height, width=color_bar_width,

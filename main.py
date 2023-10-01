@@ -1,7 +1,9 @@
 # doc : https://vimeo.com/47396346     for group_widget
 
 import sys
-from PyQt5 import QtWidgets, QtCore, QtGui #QtWebEngineWidgets
+
+import networkx as networkx
+from PyQt5 import QtWidgets, QtCore, QtGui  # QtWebEngineWidgets
 from PyQt5.Qt import *
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFileDialog, QMessageBox, QMenu, QStatusBar
 from PyQt5.QtGui import QFontDatabase, QMouseEvent
@@ -77,7 +79,7 @@ class MainWindow:
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self.main_win)
         self.seq_ui = Ui_Seq_window()
-        #self.model_ui = Ui_model_dialog()
+        # self.model_ui = Ui_model_dialog()
         self.model_ui = Ui_SimPlot_settings_form()
         self.bootscan_settings_ui = Ui_bootscan_dialog()
         self.app_settings = user_pref_dialog()
@@ -92,7 +94,7 @@ class MainWindow:
         self.simplot_refseq = None
         self.network_settings = None
         self.network_instance = None
-        #switch True if running outside the exe file to show network directly in GUI (optional)
+        # switch True if running outside the exe file to show network directly in GUI (optional)
         self.show_network_in_gui = False
         self.thread = None
         self.worker = None
@@ -123,17 +125,16 @@ class MainWindow:
         # self.btn_group_color.clicked.connect(lambda: self.select_group_color())
         # page 1 - save to nexus
         self.ui.Btn_save_nexus.clicked.connect(lambda: self.export_nexus())
-        #page 1 - user preferences
+        # page 1 - user preferences
         self.ui.Btn_user_pref.clicked.connect(lambda: self.user_pref_settings())
         # popup window seq
-        #self.ui.listWidget_groups.itemDoubleClicked.connect(lambda: self.open_group_making_dialog())
+        # self.ui.listWidget_groups.itemDoubleClicked.connect(lambda: self.open_group_making_dialog())
         self.ui.listWidget_groups.currentItemChanged.connect(lambda: self.item_clicked())
 
         self.ui.Btn_all_to_free.clicked.connect(lambda: self.Btn_all_to_free_clicked())
         self.ui.Btn_all_to_group.clicked.connect(lambda: self.Btn_all_to_group_clicked())
         self.ui.Btn_to_free.clicked.connect(lambda: self.Btn_to_free_clicked())
         self.ui.Btn_to_group.clicked.connect(lambda: self.Btn_to_group_clicked())
-
 
         ### simplot page
         # launch simplot analysis
@@ -144,12 +145,11 @@ class MainWindow:
         self.ui.Btn_plot_window.clicked.connect(lambda: self.plot_in_window())
         # refseq combobox simplot
         self.ui.comboBox_simplot_refseq.currentTextChanged.connect(lambda: self.simplot_change_refseq())
-        #view quality report
-        #self.ui.Btn_quality.clicked.connect(lambda: self.show_simplot_quality_report())
+        # view quality report
+        # self.ui.Btn_quality.clicked.connect(lambda: self.show_simplot_quality_report())
         self.ui.Btn_quality.clicked.connect(lambda: self.call_quality_report_generator())
         # cancel analysis
         self.ui.Btn_simplot_cancel.clicked.connect(lambda: self.stop_simplot())
-
 
         ### bootscan page
         # go to bootscan page
@@ -165,7 +165,6 @@ class MainWindow:
         # cancel analysis
         self.ui.Btn_bootscan_cancel.clicked.connect(lambda: self.stop_bootscan())
 
-
         ### findsite page
         # go to Findsites page
         self.ui.Btn_findSites.clicked.connect(lambda: self.go_to_findSite_page())
@@ -175,7 +174,6 @@ class MainWindow:
         # self.ui.Btn_reset_findSite.clicked.connect(lambda: self.reset_findsite_result())
         # save findsite output
         self.ui.Btn_save_findSite.clicked.connect(lambda: self.save_findsite_output())
-
 
         ### network page
         # go to simplot network page
@@ -195,13 +193,14 @@ class MainWindow:
 
         ### recombination test page
         self.ui.Btn_recombination_test.clicked.connect((lambda: self.go_to_recom_page()))
-        self.ui.radioBtn_phi_test.toggled.connect(lambda: self.ui.recomb_stacked_pages.setCurrentWidget(self.ui.phi_test_option_page))
-        self.ui.radioBtn_profile_test.toggled.connect(lambda: self.ui.recomb_stacked_pages.setCurrentWidget(self.ui.phi_profile_option_page))
+        self.ui.radioBtn_phi_test.toggled.connect(
+            lambda: self.ui.recomb_stacked_pages.setCurrentWidget(self.ui.phi_test_option_page))
+        self.ui.radioBtn_profile_test.toggled.connect(
+            lambda: self.ui.recomb_stacked_pages.setCurrentWidget(self.ui.phi_profile_option_page))
         self.ui.Btn_start_recomb_test.clicked.connect(lambda: self.start_recombination_test())
 
         ### Help page
         self.ui.pushButton.clicked.connect(self.send_to_wiki)
-
 
     def go_to_group_page(self):
         if self.worker is None:
@@ -248,7 +247,9 @@ class MainWindow:
         try:
             webbrowser.open('https://github.com/Stephane-S/Simplot_PlusPlus/wiki')
         except webbrowser.Error:
-            self.error_msg_box("Failed to open a web page. Please visit https://github.com/Stephane-S/Simplot_PlusPlus/wiki for help.")
+            self.error_msg_box(
+                "Failed to open a web page. Please visit https://github.com/Stephane-S/Simplot_PlusPlus/wiki for help.")
+
     ####################################################
     # This section handles the recombination test page #
     ####################################################
@@ -295,10 +296,10 @@ class MainWindow:
 
         profile_text = "Phi Profile test is a Phi-test performed on a sliding window to further detect regions that exhibit evidence of mosaicism. \n" \
                        "Select your parameters and press start to start the analysis. \n\n" \
-                        "- Permutations: Computes the Phi statistic of a direct permutation test\n" \
-                        "- Window size: Size of the Phi analysis windows \n" \
-                        "- Break window: Scanning size for regions to test \n" \
-                        "- Step size: Moving step between sliding window analyses"
+                       "- Permutations: Computes the Phi statistic of a direct permutation test\n" \
+                       "- Window size: Size of the Phi analysis windows \n" \
+                       "- Break window: Scanning size for regions to test \n" \
+                       "- Step size: Moving step between sliding window analyses"
 
         distance_test = "This test detects sites of potential mosaicism based on the results of a distance proportion test\n" \
                         "- Samson et al. (2022). Un nouveau logiciel pour l'analyse de similarité entre les séquences" \
@@ -373,7 +374,8 @@ class MainWindow:
             progress_bar = self.ui.progressBar_global
 
             self.analysis_instance = SimplotAnalysis(filepath, filetype, datatype, group_dict,
-                                                  self.user_pref_dict["consensus_threshold"], progress_bar, self.status)
+                                                     self.user_pref_dict["consensus_threshold"], progress_bar,
+                                                     self.status)
 
             self.open_model_settings_dialog()
             self.launch_simplot(distance_recomb=True)
@@ -397,7 +399,6 @@ class MainWindow:
                 self.save_recombination_output()
             self.ui.progressBar_global.setValue(0)
         self.statuslabel.setText(f"")
-
 
     def save_recombination_output(self):
         temp_file = pathlib.Path("stored/recombination_output.txt")
@@ -435,7 +436,7 @@ class MainWindow:
             else:
                 settings_dict["permutations"] = False
 
-            settings_dict["window_size"]= self.ui.spinBox_phi_test_window.value()
+            settings_dict["window_size"] = self.ui.spinBox_phi_test_window.value()
             settings_dict["other_stats"] = self.ui.checkBox_phi_test_other_tests.isChecked()
 
         elif self.ui.radioBtn_profile_test.isChecked():
@@ -493,14 +494,12 @@ class MainWindow:
 
         return (score / seq_length) * 100
 
-
-
     ################################################
     # This section handles the group making feature#
     ################################################
 
     def item_clicked(self):
-        for index in range (self.ui.listWidget_groups.count()):
+        for index in range(self.ui.listWidget_groups.count()):
             item = self.ui.listWidget_groups.item(index)
             widget = self.ui.listWidget_groups.itemWidget(item)
             if widget is not None:
@@ -549,13 +548,13 @@ class MainWindow:
         selected_items = [item.text() for item in self.ui.listWidget_free_seq.selectedItems()]
         selected_indexes = [index.row() for index in self.ui.listWidget_free_seq.selectedIndexes()]
 
-        #reverse the indexes list so we remove the highest first later
+        # reverse the indexes list so we remove the highest first later
         reversed_indexes = sorted(selected_indexes, reverse=True)
-        #remove the items by their indexes
+        # remove the items by their indexes
         for index in reversed_indexes:
             self.ui.listWidget_free_seq.takeItem(index)
 
-        #add items to the selected group by their item name
+        # add items to the selected group by their item name
         self.ui.listWidget_selected_group.addItems(selected_items)
 
         self.update_group_listwidgets()
@@ -568,7 +567,7 @@ class MainWindow:
 
         # reverse the indexes list so we remove the highest first later
         reversed_indexes = sorted(selected_indexes, reverse=True)
-        #remove the items by their indexes
+        # remove the items by their indexes
         for index in reversed_indexes:
             self.ui.listWidget_selected_group.takeItem(index)
 
@@ -599,7 +598,7 @@ class MainWindow:
 
         try:
             self.groups.update_group(group_name, seq_list)
-            self. modify_nbr_seq_label_listwidget(index, group_name)
+            self.modify_nbr_seq_label_listwidget(index, group_name)
         except KeyError as e:
             self.error_msg_box(f"Sequence could not be added to group: {group_name}")
 
@@ -609,7 +608,7 @@ class MainWindow:
         widget = self.ui.listWidget_groups.itemWidget(item)
         nbr_seq = len(self.groups.get_seq_in_group(group_name))
         if nbr_seq < 2:
-            widget.label_seq_length.setText(str(nbr_seq) + " sequence") #label_2
+            widget.label_seq_length.setText(str(nbr_seq) + " sequence")  # label_2
         else:
             widget.label_seq_length.setText(str(nbr_seq) + " sequences")
 
@@ -623,14 +622,13 @@ class MainWindow:
         else:
             return None, None, None, None
 
-
     ############################################
     # This section handles the network analysis#
     ############################################
 
     def go_to_sp_network_page(self):
         self.ui.Btn_start_sp_network.setToolTip("The resulting graph will be shown in the default browser")
-        if self.groups.check_if_empty_group(): # True if empty group
+        if self.groups.check_if_empty_group():  # True if empty group
             self.error_msg_box("Empty group(s) detected")
 
         else:
@@ -640,7 +638,9 @@ class MainWindow:
             datatype = self.groups.get_datatype()
             group_dict = self.groups.return_groups_dict()
             progress_bar = self.ui.progressBar_global
-            self.analysis_instance = SimplotAnalysis(filepath, filetype, datatype, group_dict,self.user_pref_dict["consensus_threshold"], progress_bar, self.status)
+            self.analysis_instance = SimplotAnalysis(filepath, filetype, datatype, group_dict,
+                                                     self.user_pref_dict["consensus_threshold"], progress_bar,
+                                                     self.status)
             self.ui.progressBar_global.setValue(0)
 
     def clear_network_graph(self):
@@ -671,7 +671,7 @@ class MainWindow:
             self.statuslabel.setText(f"Generating similarity network")
             group_dict = self.groups.return_groups_dict()
             consensus_dict = self.analysis_instance.get_consensus_dict()
-            #self.analysis_instance
+            # self.analysis_instance
 
             # ## simplot settings
             model_settings_dict = self.analysis_instance.get_model_settings()
@@ -692,7 +692,7 @@ class MainWindow:
             if dist_dict is not None:
                 self.network_instance = NetworkAnalysis(consensus_dict, group_dict, dist_dict, step)
                 self.ui.progressBar_global.setValue(90)
-                #get recombination df
+                # get recombination df
                 global_sim_dict = self.network_instance.get_global_sim_dict()
                 recombination_instance = RecombinationDetection(dist_dict, global_sim_dict, groups_id)
                 recombination_df = recombination_instance.get_recombination_detect_results()
@@ -713,12 +713,12 @@ class MainWindow:
         :return: no returns
         """
 
-        #Set to True to show network graph html page directly in GUI (unstable for creating executables because of QtWebEngine difficulties with <script> tags)
-        #set to false to show in user web browser (recommended)
+        # Set to True to show network graph html page directly in GUI (unstable for creating executables because of QtWebEngine difficulties with <script> tags)
+        # set to false to show in user web browser (recommended)
 
         if self.show_network_in_gui:
             pass
-            print ("todo")
+            print("todo")
             # todo
 
             # if self.network_instance is not None:
@@ -744,14 +744,15 @@ class MainWindow:
                 try:
                     graph_global_edge, graph_local_edge = self.network_instance.create_graph(seq_length, group_colors)
 
-                    html_file = Bgf.plot_bokeh(graph_global_edge, graph_local_edge, seq_length, step, model_settings_dict, recombination_df, save_as_svg)
+                    #TODO: Fix this error:
+                    html_file = Bgf.plot_bokeh(graph_global_edge, graph_local_edge, seq_length, step,
+                                               model_settings_dict, recombination_df, save_as_svg)
                     self.clear_network_graph()
                     self.open_html_in_browser()
                 except KeyError:
                     self.error_msg_box("Negative similarity values have forced the analysis to stop.\n"
                                        "You can try activating the SimPlot normalization option to solve the issue.\n"
                                        "This option is available in the User Preference section of the Groups page.")
-
 
     def open_html_in_browser(self):
         url = pathlib.Path("stored/network_output.html")
@@ -761,8 +762,8 @@ class MainWindow:
             try:  # should work on MacOS and most linux versions
                 subprocess.call(['open', url])
             except:
-                self.error_msg_box("could not open in browser. You can save the HTML file and open it on your preferred browser.")
-
+                self.error_msg_box(
+                    "could not open in browser. You can save the HTML file and open it on your preferred browser.")
 
     def on_loadFinished(self, ok):
         if not ok:
@@ -803,12 +804,11 @@ class MainWindow:
             if outpath != "":
                 copyfile("stored/network_output.html", outpath)
 
-
-    def setup_reopen_menu(self, menu): #todo move function to better place
+    def setup_reopen_menu(self, menu):  # todo move function to better place
         reopen_path = pathlib.Path("stored/reopen_path.pk")
         if not reopen_path.is_file():
             with open(reopen_path, 'wb') as file:
-                #print ("pickle file created")
+                # print ("pickle file created")
                 pickle.dump([], file)
         path_list = self.read_pickled_list(reopen_path)
         if len(path_list) > 0:
@@ -873,7 +873,7 @@ class MainWindow:
     #############################################
 
     def go_to_bootscan_page(self):
-        if self.groups.check_if_empty_group(): # True if empty group
+        if self.groups.check_if_empty_group():  # True if empty group
             self.error_msg_box("Empty group(s) detected")
 
         # elif self.groups.get_datatype() == "protein":
@@ -891,7 +891,8 @@ class MainWindow:
             filetype = self.groups.get_file_format()
             self.ui.progressBar_global.setValue(60)
 
-            self.bootscan_instance = Bootscan_analysis(new_filepath, filetype, new_groups, self.user_pref_dict["consensus_threshold"], self.status)
+            self.bootscan_instance = Bootscan_analysis(new_filepath, filetype, new_groups,
+                                                       self.user_pref_dict["consensus_threshold"], self.status)
             self.ui.progressBar_global.setValue(90)
             # self.bootscan_instance = Bootscanning(new_filepath, filetype, new_groups, self.user_pref_dict["consensus_threshold"], progress_bar)
 
@@ -929,7 +930,8 @@ class MainWindow:
         self.bootscan_instance.create_result_dict()
         self.ui.progressBar_global.setValue(5)
 
-        key_list = ["bootstrap", "tree_model", "window_length", "step", "distance_model", "t_t", "refresh_rate", "multiproc"]
+        key_list = ["bootstrap", "tree_model", "window_length", "step", "distance_model", "t_t", "refresh_rate",
+                    "multiproc"]
         settings_dict = dict(zip(key_list, settings_list))
         settings_dict["refseq"] = refseq
         settings_dict["seq_length"] = seq_length
@@ -954,7 +956,9 @@ class MainWindow:
         # Step 2: Create a QThread object
         self.thread = QThread()
         # Step 3: Create a worker object
-        self.worker = Worker_bootscan(instance=self.bootscan_instance, settings=settings_dict, canvas=self.bootscan_canvas, run_status=self.status, status_label=self.statuslabel)
+        self.worker = Worker_bootscan(instance=self.bootscan_instance, settings=settings_dict,
+                                      canvas=self.bootscan_canvas, run_status=self.status,
+                                      status_label=self.statuslabel)
         # Step 4: Move worker to the thread
         self.worker.moveToThread(self.thread)
         # Step 5: Connect signals and slots
@@ -976,7 +980,6 @@ class MainWindow:
         self.thread.start()
 
         self.cancel_launch_btn_switch(analysis="bootscan")
-
 
     def bootscan_finished(self, dist_dict):
         self.worker = None
@@ -1103,7 +1106,7 @@ class MainWindow:
                 plt.grid(axis='x')
             if y_gridlines:
                 plt.grid(axis='y')
-            #plt.text(90, -0.15, settings_str, color="r")  # todo optimize position
+            # plt.text(90, -0.15, settings_str, color="r")  # todo optimize position
 
         plt.show()
         plt.show()
@@ -1137,10 +1140,10 @@ class MainWindow:
 
     def go_to_simplot_page(self):
 
-        if self.groups.check_if_empty_group(): # True if empty group
+        if self.groups.check_if_empty_group():  # True if empty group
             self.error_msg_box("Empty group(s) detected")
         else:
-            #self.simplot_result = None
+            # self.simplot_result = None
             progress_bar = self.ui.progressBar_global
 
             if self.simplot_result is None:
@@ -1156,7 +1159,9 @@ class MainWindow:
                 group_dict = self.groups.return_groups_dict()
                 datatype = self.groups.get_datatype()
 
-                self.analysis_instance = SimplotAnalysis(filepath, filetype, datatype, group_dict, self.user_pref_dict["consensus_threshold"], progress_bar, self.status)
+                self.analysis_instance = SimplotAnalysis(filepath, filetype, datatype, group_dict,
+                                                         self.user_pref_dict["consensus_threshold"], progress_bar,
+                                                         self.status)
 
             self.groups.set_groups_dict(temp_dict)  # avoids the analysis instance wiping the group_dict
             if self.simplot_refseq is not None:
@@ -1207,7 +1212,7 @@ class MainWindow:
         settings_dict["refseq"] = refseq
         settings_dict["seq_length"] = seq_length
         settings_dict["iter"] = iter
-        #settings_dict["strip_gap_error_list"] = strip_gap_error_list
+        # settings_dict["strip_gap_error_list"] = strip_gap_error_list
         settings_dict["groups_colors_dict"] = groups_colors_dict
         settings_dict["plot_progress"] = plot_progress
         settings_dict["network_analysis"] = network_analysis
@@ -1262,7 +1267,6 @@ class MainWindow:
         # Step 6: Start the thread
         self.thread.start()
 
-
     def update_progress_bar(self, value):
         self.ui.progressBar_global.setValue(value)
 
@@ -1308,7 +1312,6 @@ class MainWindow:
 
             self.call_quality_report_generator(save_path)
 
-
     def call_quality_report_generator(self, save_path=None):
         self.create_distance_report()
         model_settings_dict = self.analysis_instance.get_model_settings()
@@ -1346,14 +1349,14 @@ class MainWindow:
             stacked_temp_df = pd.DataFrame(temp_df.stack(dropna=False), columns=['similarity']).reset_index()
             stacked_temp_df.insert(1, 'refseq', key)
 
-            df = df.concat(stacked_temp_df, ignore_index=False)
+            df = pd.concat([df, stacked_temp_df], ignore_index=False)
 
             df['status'] = np.where(
                 df['similarity'] >= 0, "distance calculated", np.where(
                     df['similarity'] == np.nan, "Not calculated",
                     np.where(df['similarity'] < 0, "Negative output", "Not calculated")))
 
-        df = df.reset_index(drop= True)
+        df = df.reset_index(drop=True)
 
         return df
 
@@ -1379,9 +1382,9 @@ class MainWindow:
         toolbar = NavigationToolbar(sc, self.main_win)
         self.ui.verticalLayout_10.addWidget(toolbar)
         self.ui.verticalLayout_10.addWidget(sc)
-        sc.axes.annotate(settings_str, xy=(0.5, 0),xycoords=('axes fraction', 'figure fraction'), xytext=(0, 10),
+        sc.axes.annotate(settings_str, xy=(0.5, 0), xycoords=('axes fraction', 'figure fraction'), xytext=(0, 10),
                          textcoords='offset points', size=11, ha='center', va='bottom', color="blue")
-        #sc.fig.subplots_adjust(left=0.08, bottom=0.1, top=0.9, right=0.93)
+        # sc.fig.subplots_adjust(left=0.08, bottom=0.1, top=0.9, right=0.93)
         sc.axes.set_autoscaley_on(True)
 
         if x_gridlines:
@@ -1449,7 +1452,7 @@ class MainWindow:
             model_settings_dict = self.analysis_instance.get_model_settings()
             window_length = model_settings_dict["window"]
             step = model_settings_dict["step"]
-            #refseq = model_settings_dict["refseq"]
+            # refseq = model_settings_dict["refseq"]
             model = model_settings_dict["model"]
 
             refseq = self.ui.comboBox_simplot_refseq.currentText()
@@ -1702,7 +1705,7 @@ class MainWindow:
             print("SimPlot++_groups:", group_dict, file=f)
             print("Groups_color:", groups_color, file=f)
             f.write("end;")
-            #print("done!")
+            # print("done!")
 
     def extract_nexus_groups(self):
         """
@@ -1728,7 +1731,7 @@ class MainWindow:
                     line = line.strip("Groups_color:")
                     line = line[1:]
                     group_colors = ast.literal_eval(line)
-                    #print(group_colors)
+                    # print(group_colors)
 
         return group_exist, group_dict, group_colors
 
@@ -1796,12 +1799,12 @@ class MainWindow:
         """
         bool = False
         index = None
-        #print("---- checking unique ----")
+        # print("---- checking unique ----")
         for path in list:
             if new_path == path.resolve():
                 bool = True
                 index = list.index(path)
-                #print("path already in reopen")
+                # print("path already in reopen")
                 break
 
         return bool, index
@@ -1834,18 +1837,18 @@ class MainWindow:
 
         with open(reopen_path, "wb") as fi:
             pickle.dump(new_list, fi)
-        #print("pickling:", new_list)
+        # print("pickling:", new_list)
 
     def read_pickled_list(self, pickled_path):
         if pickled_path.is_file():
-            #print("File exist")
+            # print("File exist")
             with open(pickled_path, 'rb') as fi:
                 old_list = pickle.load(fi)
 
         else:
-            #print("File not exist")
+            # print("File not exist")
             old_list = []
-        #print("read pickle:", len(old_list), old_list)
+        # print("read pickle:", len(old_list), old_list)
 
         return old_list
 
@@ -1955,11 +1958,10 @@ class MainWindow:
             for i in detected_list:
                 detected_list_counted[i] = detected_list_counted.get(i, 0) + 1
 
-            if detected_list_counted: # empty dict is False
+            if detected_list_counted:  # empty dict is False
                 detected_dict[record.id] = detected_list_counted
 
         return detected_dict
-
 
     def check_no_empty_seq(self, filepath, filetype):
         records = SeqIO.parse(filepath, filetype)
@@ -2010,7 +2012,8 @@ class MainWindow:
         with open(output_path, 'w') as f:
             SeqIO.write(records, f, 'fasta')
         self.info_msg_box("Due to unequal sequence length, one or more sequences have been padded. \n"
-                          "The new padded file has been created here: \n" + str(output_path), padding_details, padding_info=True)
+                          "The new padded file has been created here: \n" + str(output_path), padding_details,
+                          padding_info=True)
         return output_path, "fasta"
 
     def update_groups_from_nexus_input(self):
@@ -2078,7 +2081,7 @@ class MainWindow:
 
         if details is not None and ambiguous is True and isinstance(details, dict):
             for id, count_dict in details.items():
-                line_str= f"Sequence id: {id} \n"
+                line_str = f"Sequence id: {id} \n"
                 for char, count in count_dict.items():
                     if count == 1:
                         count_term = "once"
@@ -2101,7 +2104,6 @@ class MainWindow:
                 return widget.lineEdit_group_name.text()
             else:
                 return widget.lineEdit_group_name.placeholderText()
-
 
     def open_bootscan_dialog(self):
         dialog = QtWidgets.QDialog()
@@ -2153,34 +2155,34 @@ class MainWindow:
         self.app_settings.checkBox_network_svg.setChecked(pref_dict["network_svg"])
 
     def save_user_pref(self):
-        threshold_value = self.app_settings.spinBox_consensus_threshold.value()/100
+        threshold_value = self.app_settings.spinBox_consensus_threshold.value() / 100
         updated_pref_dict = {"display_ambiguous_warning": str(self.app_settings.checkBox_ambi_warning.isChecked()),
-                          "auto_save_sp_qual": str(self.app_settings.checkBox_save_qual_report.isChecked()),
-                          "consensus_threshold": str(threshold_value),
-                          "X_grid_lines": str(self.app_settings.checkBox_show_x_grid.isChecked()),
-                          "Y_grid_lines": str(self.app_settings.checkBox_show_y_grid.isChecked()),
+                             "auto_save_sp_qual": str(self.app_settings.checkBox_save_qual_report.isChecked()),
+                             "consensus_threshold": str(threshold_value),
+                             "X_grid_lines": str(self.app_settings.checkBox_show_x_grid.isChecked()),
+                             "Y_grid_lines": str(self.app_settings.checkBox_show_y_grid.isChecked()),
                              "normalize_simplot": str(self.app_settings.checkBox_normalize_simplot.isChecked()),
                              "nprocs": str(self.app_settings.spinBox_nprocs.value()),
                              "network_svg": str(self.app_settings.checkBox_network_svg.isChecked())
-                          }
+                             }
 
         self.user_pref.create_preference_config_file(updated_pref_dict)
         self.user_pref_dict = self.user_pref.load_user_pref()
 
-
-    def save_consensus_fasta(self, recomb_test=False, recomb_consensus= None):
+    def save_consensus_fasta(self, recomb_test=False, recomb_consensus=None):
 
         if self.groups is not None:
             filepath = self.groups.get_file_path()
             filetype = self.groups.get_file_format()
             datatype = self.groups.get_datatype()
-            group_dict = self.groups.return_groups_dict() #todo make sure groups exist
+            group_dict = self.groups.return_groups_dict()  # todo make sure groups exist
             progress_bar = self.ui.progressBar_global
             if recomb_test == True:
                 consensus_threshold = self.user_pref_dict["consensus_threshold"]
             else:
-                consensus_threshold = self.app_settings.spinBox_consensus_threshold.value()/100
-            self.analysis_instance = SimplotAnalysis(filepath, filetype, datatype, group_dict,consensus_threshold, progress_bar, self.status)
+                consensus_threshold = self.app_settings.spinBox_consensus_threshold.value() / 100
+            self.analysis_instance = SimplotAnalysis(filepath, filetype, datatype, group_dict, consensus_threshold,
+                                                     progress_bar, self.status)
             consensus_dict = self.analysis_instance.get_consensus_dict()
 
             default_path = pathlib.Path("stored/consensus_output.fasta")
@@ -2203,8 +2205,6 @@ class MainWindow:
             self.app_settings.label_dwld.setText("Failed - no groups")
             self.app_settings.label_dwld.setStyleSheet("QLabel {color : Red; }")
 
-
-
     ##########################
     # model_dialog functions #
     ##########################
@@ -2222,12 +2222,13 @@ class MainWindow:
 
         self.setup_model_settings()
 
-        self.enable_model_options() #here
+        self.enable_model_options()  # here
 
         self.model_ui.btn_data_dna.clicked.connect(lambda: self.select_dna())
         self.model_ui.btn_data_protein.clicked.connect(lambda: self.select_protein())
         self.model_ui.buttonBox.accepted.connect(lambda: self.update_model_settings())
-        self.model_ui.checkBox_auto.stateChanged.connect(lambda: self.model_ui.SpinBox_param_a.setEnabled(False) if self.model_ui.checkBox_auto.isChecked() else self.model_ui.SpinBox_param_a.setEnabled(True))
+        self.model_ui.checkBox_auto.stateChanged.connect(lambda: self.model_ui.SpinBox_param_a.setEnabled(
+            False) if self.model_ui.checkBox_auto.isChecked() else self.model_ui.SpinBox_param_a.setEnabled(True))
         self.model_ui.comboBox_models.currentIndexChanged.connect(lambda: self.enable_model_options())
 
         dialog.exec_()
@@ -2235,7 +2236,8 @@ class MainWindow:
     def enable_model_options(self):
         gap_penalty_models = ["Hamming", "Jukes-Cantor"]
         param_a_models = ["JinNeiGamma"]
-        optimized_models = ["F81 - optimized","HKY85 - optimized","TN93 - optimized","GTR - optimized","ssGN - optimized"]
+        optimized_models = ["F81 - optimized", "HKY85 - optimized", "TN93 - optimized", "GTR - optimized",
+                            "ssGN - optimized"]
 
         model = str(self.model_ui.comboBox_models.currentText())
         if model in gap_penalty_models:
@@ -2243,7 +2245,6 @@ class MainWindow:
             self.model_ui.label_8.setHidden(False)
             self.model_ui.Spin_Box_Gap.setHidden(False)
             self.model_ui.Spin_Box_Gap.setEnabled(True)
-
 
             self.model_ui.SpinBox_param_a.setEnabled(False)
             self.model_ui.SpinBox_param_a.setHidden(True)
@@ -2262,12 +2263,12 @@ class MainWindow:
             self.model_ui.checkBox_auto.setHidden(False)
             self.model_ui.SpinBox_param_a.setEnabled(True)
             self.model_ui.checkBox_auto.setEnabled(True)
-            #self.model_ui.radioButton_2_manually.setEnabled(True)
+            # self.model_ui.radioButton_2_manually.setEnabled(True)
         else:
             self.model_ui.Spin_Box_Gap.setEnabled(False)
             self.model_ui.SpinBox_param_a.setEnabled(False)
             self.model_ui.checkBox_auto.setEnabled(False)
-            #self.model_ui.radioButton_2_manually.setEnabled(False)
+            # self.model_ui.radioButton_2_manually.setEnabled(False)
 
             self.model_ui.label_9.setHidden(True)
             self.model_ui.label_8.setHidden(True)
@@ -2294,7 +2295,7 @@ class MainWindow:
 
         index = self.model_ui.comboBox_models.findText(settings_dict["model"])
         self.model_ui.comboBox_models.setCurrentIndex(index)
-        #self.populate_refseq_combobox(settings_dict["refseq"])
+        # self.populate_refseq_combobox(settings_dict["refseq"])
         self.model_ui.checkBox_multiproc.setChecked(settings_dict["multiproc"])
 
         # creates a toggle switch between dna/protein buttons
@@ -2305,16 +2306,15 @@ class MainWindow:
             self.model_ui.btn_data_dna.setChecked(False)
             self.model_ui.btn_data_protein.setChecked(True)
 
-
         if settings_dict["param_a"] is None:
             self.model_ui.SpinBox_param_a.setValue(0)
             self.model_ui.checkBox_auto.setChecked(True)
-            #self.model_ui.radioButton_2_manually.setChecked(False)
+            # self.model_ui.radioButton_2_manually.setChecked(False)
             self.model_ui.SpinBox_param_a.setEnabled(False)
             self.model_ui.SpinBox_param_a.setHidden(True)
         else:
             self.model_ui.SpinBox_param_a.setValue(settings_dict["param_a"])
-            #self.model_ui.radioButton_2_manually.setChecked(True)
+            # self.model_ui.radioButton_2_manually.setChecked(True)
             self.model_ui.checkBox_auto.setChecked(False)
             self.model_ui.SpinBox_param_a.setHidden(False)
 
@@ -2326,7 +2326,7 @@ class MainWindow:
         else:
             self.model_ui.comboBox_strip_gap.setCurrentIndex(0)
 
-        #print(settings_dict["refresh_rate"])
+        # print(settings_dict["refresh_rate"])
         if settings_dict["refresh_rate"] == 1:
             self.model_ui.comboBox_refresh_rate.setCurrentText("every window")
         elif settings_dict["refresh_rate"] == 10:
@@ -2370,18 +2370,18 @@ class MainWindow:
         multiproc = self.model_ui.checkBox_multiproc.isChecked()
 
         settings_dict = {"model": model,
-                        "window": window,
-                        "step": step,
-                        "gap": gap,
-                        "param_a": param_a,
-                        "datatype": datatype,
-                        "refresh_rate": refresh_rate,
-                        "gap_treshold": gap_treshold,
-                        "multiproc": multiproc
-                        }
+                         "window": window,
+                         "step": step,
+                         "gap": gap,
+                         "param_a": param_a,
+                         "datatype": datatype,
+                         "refresh_rate": refresh_rate,
+                         "gap_treshold": gap_treshold,
+                         "multiproc": multiproc
+                         }
 
         self.analysis_instance.update_settings(settings_dict)
-        #print(self.analysis_instance.get_model_settings())
+        # print(self.analysis_instance.get_model_settings())
         self.simplot_result = None
 
     def update_model_combo(self, model_list):
@@ -2398,12 +2398,12 @@ class MainWindow:
                       "JinNeiGamma",
                       "LogDet",
                       "F84",
-                      "F81 - optimized", #F81
-                      "HKY85 - optimized", #HKY85
-                      "TN93", #tn93
-                      "TN93 - optimized", #TN93
-                      "GTR - optimized", #GTR
-                      "ssGN - optimized", # ssGN
+                      "F81 - optimized",  # F81
+                      "HKY85 - optimized",  # HKY85
+                      "TN93",  # tn93
+                      "TN93 - optimized",  # TN93
+                      "GTR - optimized",  # GTR
+                      "ssGN - optimized",  # ssGN
                       "paralinear",
                       "percent",
                       "identity",
@@ -2412,7 +2412,7 @@ class MainWindow:
                       "levin", "mclachlan", "mdm78", "blastn", "rao", "risler", "str", "trans", "blosum45", "blosum50",
                       "blosum62",
                       "blosum80", "blosum90", "pam250", "pam30", "pam70"]
-        #43 models dna
+        # 43 models dna
         # prot 20
 
         self.model_ui.btn_data_dna.setChecked(True)
@@ -2441,22 +2441,22 @@ class MainWindow:
 
     def models_text(self, model):
         # http://rothlab.ucdavis.edu/genhelp/distances.html
-        #https://en.wikipedia.org/wiki/Models_of_DNA_evolution
-        #https://evolution.genetics.washington.edu/phylip/doc/dnadist.html
-        #https://cogent3.readthedocs.io/en/latest/cookbook/evo_modelling.html#Specifying-substitution-models
-        #https://github.com/biopython/biopython/tree/master/Bio/Align/substitution_matrices/data
+        # https://en.wikipedia.org/wiki/Models_of_DNA_evolution
+        # https://evolution.genetics.washington.edu/phylip/doc/dnadist.html
+        # https://cogent3.readthedocs.io/en/latest/cookbook/evo_modelling.html#Specifying-substitution-models
+        # https://github.com/biopython/biopython/tree/master/Bio/Align/substitution_matrices/data
 
         optimized_models = [
-         "F81 - optimized",  # F81
-         "HKY85 - optimized",  # HKY85]
-         "TN93 - optimized",  # TN93
-         "GTR - optimized",  # GTR
-         "ssGN - optimized"  # ssGN
-         ]
+            "F81 - optimized",  # F81
+            "HKY85 - optimized",  # HKY85]
+            "TN93 - optimized",  # TN93
+            "GTR - optimized",  # GTR
+            "ssGN - optimized"  # ssGN
+        ]
 
         benner_models = [
             "benner22", "benner6", "benner74", "genetic"
-        ] 
+        ]
 
         blosum_models = [
             "blosum45", "blosum50", "blosum62", "blosum80", "blosum90",
@@ -2466,7 +2466,7 @@ class MainWindow:
             "pam250", "pam30", "pam70"
         ]
 
-        model_descript =""
+        model_descript = ""
         clean_model_name = model.replace(" - optimized", "")
         # """if model in trex_models:
         #     model_descript = model_descript + str(clean_model_name) + " model obtained from Trex-online." + "\n\n"
@@ -2488,44 +2488,44 @@ class MainWindow:
             model_descript = model_descript + ""
 
         model_text_dict = {
-                      "Hamming" : "The Hamming distance between two equal-length strings of symbols is the number of positions at which the corresponding symbols are different.",
-                      "Jukes-Cantor" : "Simplest distance model assuming equal base frequency and equal mutation rates (Jukes and Cantor 1969).",
-                      "Kimura 2-Parameters" : "Distance model that assumes an equal base frequency but distinguishes between transition and transversion (Kimura 1980).",
-                      "Tamura" : "Extension of the Kimura model that includes a G+C content bias (Tamura 1992).",
-                      "TajimaNei" : "This model uses the same equation as the Jukes-Cantor model but the parameters are calculated differently. Also, gaps are always ignored and only exact matches are considered (Tajima and Nei 1984). ",
-                      "JinNeiGamma" : "This model takes transitions and transversions into account. It is designed to to be used when the substitution rate varies extensively from site to site. The shape parameter a is the square of the inverse of the coefficient of variation (Tajima and Nei 1984).",
-                      "LogDet" : "Computes the distance from the determinant of the empirically observed matrix of joint probabilities of nucleotides in the two sequences (Lockhart et al. 1994; Steel 1994).",
-                      "F84" : "The F84 model incorporates different rates of transition and transversion, but also allows for different frequencies of the four nucleotides (Felsenstein and Churchill 1984).",
-                      "F81" : "Extension of the JC69 model in which base frequencies are allowed to vary (Felsenstein 1981).",
-                      "HKY85" : "This model distinguishes between the rate of transitions and transversions and allows for unequal base frequencies (Hasegawa, Kishino and Yano 1985).",
-                      "TN93" : "This model distinguishes between the two different types of transition. Transversions are all assumed to occur at the same rate, but that rate is allowed to be different from both of the rates for transitions. Unequal base frequencies are also allowed (Tamura and Nei 1993).",
-                      "GTR" : "The Generalised time reversible (GTR) is the most general neutral, independent, finite-sites, time-reversible model possible (Tavaré 1986).",
-                      "ssGN" : "Strand-symmetric general Markov nucleotide model (non-stationary, non-reversible) \n(Kaehler 2017, Journal of Theoretical Biology 420: 144–51).",
-                      "paralinear" : "Simple distance model that allows for unequal base frequencies (Lake 1994).",
-                      "tn93" : "This model distinguishes between the two different types of transition. Transversions are all assumed to occur at the same rate, but that rate is allowed to be different from both of the rates for transitions. Unequal base frequencies are also allowed (Tamura and Nei 1993).",
-                      "percent" : "Simple model that calculates the percentage of similarity.",
-                      "Kimura" : "Distance model that assumes an equal base frequency but distinguishes between transition and transversion (Kimura 1980).",
-                      "DSO78" : "Protein model based on the Dayhoff empirical model (Dayhoff et al. 1978). ",
-                      "AH96" : "Model of amino acid substitution in proteins encoded by mitochondrial DNA (Adachi and Hasegawa 1996).",
-                      "AH96_mtmammals" : "Empirical model for mammalian mitochondrial proteins (Adachi and Hasegawa 1996).",
-                      "JTT92" : "This model correct for multiple substitutions based on the Jones-Taylor-Thornton (JTT) protein model (Jones et al. 1992).",
-                      "WG01" : "Whelan and Goldman (WAG) model.",
-                      "dayhoff" : "Model based on the Dayhoff substitution matrix (Dayhoff et al. 1978).",
-                      "feng" : "This scoring matrix scoring system takes into account the structural similarities of amino acids, as well as the likelihoods of interchanges (Feng et al. 1985).",
-                      "gonnet1992" : "Model based on the Gonnet substitution matrix (Gonnet et al. 1992).",
-                      "hoxd70" : " Model based on a matrix derived from aligned segments of human and mouse DNA (Chiaromonte et al. 2002).",
-                      "johnson" : "Scoring matrix based on the amino acids structures (Johnson and Overington 1993, Journal of Molecular Biology 233: 716-738).",
-                      "jones" : "This model correct for multiple substitutions based on the Jones-Taylor-Thornton (JTT) protein model (Jones, Taylor and Thornton 1992, Computer Applications in the Biosciences: CABIOS 8: 275-282).",
-                      "levin": "the Levenshtein distance between two sequences is the minimum number of single-nucleotide edits (insertions, deletions or substitutions) required to change one sequence into the other (Levin, Robson and Garnier 1986, FEBS Letters 205: 303-308).",
-                      "mclachlan" : "Scoring matrix based on the conservation of spatial structures in distantly-related protein families (McLachlan 1971, Journal of Molecular Biology 61: 409-424).",
-                      "mdm78" : "This model is based on the Mutation Data Matrix developped by Schwartz and Dayhoff (1978).",
-                      "rao" : "Scoring matrix for amino acid residue exchanges based on residue characteristic physical parameters (Rao 1987, International Journal of Peptide and Protein Research: 29(2): 276-281).",
-                      "risler" : "Scoring matrix based on multi-dimensional statistical methods, efficient for scoring distant sequences(Risler et al. 1988, Journal of Molecular Biology 204(4): 1019-1029).",
-                      "schneider" : "Empirical codon substitution matrix (Scheinder, Cannarozzi and Gonnet 2005, BMC Bioinformatics 6:134)",
-                      "str" : "Model based on the application of a hybrid set of scoring matrices (Henikoff 1993, Proteins: Structure, Function, and Genetics: 17(1): 49-61).",
-                      "trans" : "Model based on a transition and transversion scoring matrix to reduce noise when comparing distantly related sequences (Wheeler 1996)."
+            "Hamming": "The Hamming distance between two equal-length strings of symbols is the number of positions at which the corresponding symbols are different.",
+            "Jukes-Cantor": "Simplest distance model assuming equal base frequency and equal mutation rates (Jukes and Cantor 1969).",
+            "Kimura 2-Parameters": "Distance model that assumes an equal base frequency but distinguishes between transition and transversion (Kimura 1980).",
+            "Tamura": "Extension of the Kimura model that includes a G+C content bias (Tamura 1992).",
+            "TajimaNei": "This model uses the same equation as the Jukes-Cantor model but the parameters are calculated differently. Also, gaps are always ignored and only exact matches are considered (Tajima and Nei 1984). ",
+            "JinNeiGamma": "This model takes transitions and transversions into account. It is designed to to be used when the substitution rate varies extensively from site to site. The shape parameter a is the square of the inverse of the coefficient of variation (Tajima and Nei 1984).",
+            "LogDet": "Computes the distance from the determinant of the empirically observed matrix of joint probabilities of nucleotides in the two sequences (Lockhart et al. 1994; Steel 1994).",
+            "F84": "The F84 model incorporates different rates of transition and transversion, but also allows for different frequencies of the four nucleotides (Felsenstein and Churchill 1984).",
+            "F81": "Extension of the JC69 model in which base frequencies are allowed to vary (Felsenstein 1981).",
+            "HKY85": "This model distinguishes between the rate of transitions and transversions and allows for unequal base frequencies (Hasegawa, Kishino and Yano 1985).",
+            "TN93": "This model distinguishes between the two different types of transition. Transversions are all assumed to occur at the same rate, but that rate is allowed to be different from both of the rates for transitions. Unequal base frequencies are also allowed (Tamura and Nei 1993).",
+            "GTR": "The Generalised time reversible (GTR) is the most general neutral, independent, finite-sites, time-reversible model possible (Tavaré 1986).",
+            "ssGN": "Strand-symmetric general Markov nucleotide model (non-stationary, non-reversible) \n(Kaehler 2017, Journal of Theoretical Biology 420: 144–51).",
+            "paralinear": "Simple distance model that allows for unequal base frequencies (Lake 1994).",
+            "tn93": "This model distinguishes between the two different types of transition. Transversions are all assumed to occur at the same rate, but that rate is allowed to be different from both of the rates for transitions. Unequal base frequencies are also allowed (Tamura and Nei 1993).",
+            "percent": "Simple model that calculates the percentage of similarity.",
+            "Kimura": "Distance model that assumes an equal base frequency but distinguishes between transition and transversion (Kimura 1980).",
+            "DSO78": "Protein model based on the Dayhoff empirical model (Dayhoff et al. 1978). ",
+            "AH96": "Model of amino acid substitution in proteins encoded by mitochondrial DNA (Adachi and Hasegawa 1996).",
+            "AH96_mtmammals": "Empirical model for mammalian mitochondrial proteins (Adachi and Hasegawa 1996).",
+            "JTT92": "This model correct for multiple substitutions based on the Jones-Taylor-Thornton (JTT) protein model (Jones et al. 1992).",
+            "WG01": "Whelan and Goldman (WAG) model.",
+            "dayhoff": "Model based on the Dayhoff substitution matrix (Dayhoff et al. 1978).",
+            "feng": "This scoring matrix scoring system takes into account the structural similarities of amino acids, as well as the likelihoods of interchanges (Feng et al. 1985).",
+            "gonnet1992": "Model based on the Gonnet substitution matrix (Gonnet et al. 1992).",
+            "hoxd70": " Model based on a matrix derived from aligned segments of human and mouse DNA (Chiaromonte et al. 2002).",
+            "johnson": "Scoring matrix based on the amino acids structures (Johnson and Overington 1993, Journal of Molecular Biology 233: 716-738).",
+            "jones": "This model correct for multiple substitutions based on the Jones-Taylor-Thornton (JTT) protein model (Jones, Taylor and Thornton 1992, Computer Applications in the Biosciences: CABIOS 8: 275-282).",
+            "levin": "the Levenshtein distance between two sequences is the minimum number of single-nucleotide edits (insertions, deletions or substitutions) required to change one sequence into the other (Levin, Robson and Garnier 1986, FEBS Letters 205: 303-308).",
+            "mclachlan": "Scoring matrix based on the conservation of spatial structures in distantly-related protein families (McLachlan 1971, Journal of Molecular Biology 61: 409-424).",
+            "mdm78": "This model is based on the Mutation Data Matrix developped by Schwartz and Dayhoff (1978).",
+            "rao": "Scoring matrix for amino acid residue exchanges based on residue characteristic physical parameters (Rao 1987, International Journal of Peptide and Protein Research: 29(2): 276-281).",
+            "risler": "Scoring matrix based on multi-dimensional statistical methods, efficient for scoring distant sequences(Risler et al. 1988, Journal of Molecular Biology 204(4): 1019-1029).",
+            "schneider": "Empirical codon substitution matrix (Scheinder, Cannarozzi and Gonnet 2005, BMC Bioinformatics 6:134)",
+            "str": "Model based on the application of a hybrid set of scoring matrices (Henikoff 1993, Proteins: Structure, Function, and Genetics: 17(1): 49-61).",
+            "trans": "Model based on a transition and transversion scoring matrix to reduce noise when comparing distantly related sequences (Wheeler 1996)."
 
-                    }
+        }
 
         if clean_model_name in model_text_dict.keys():
             model_descript = model_descript + model_text_dict[clean_model_name]
@@ -2541,7 +2541,7 @@ class MainWindow:
         if selected_refseq is None:
             self.ui.comboBox_simplot_refseq.setCurrentIndex(0)
         else:
-            index = self.ui.comboBox_simplot_refseq.findText(selected_refseq) #model_ui to ui
+            index = self.ui.comboBox_simplot_refseq.findText(selected_refseq)  # model_ui to ui
             self.ui.comboBox_simplot_refseq.setCurrentIndex(index)
 
         combobox_width = self.ui.comboBox_simplot_refseq.minimumSizeHint().width()
@@ -2594,12 +2594,12 @@ class MainWindow:
                       "JinNeiGamma",
                       "LogDet",
                       "F84",
-                      "F81 - optimized", #F81
-                      "HKY85 - optimized", #HKY85
-                      "TN93", #tn93
-                      "TN93 - optimized", #TN93
-                      "GTR - optimized", #GTR
-                      "ssGN - optimized", # ssGN
+                      "F81 - optimized",  # F81
+                      "HKY85 - optimized",  # HKY85
+                      "TN93",  # tn93
+                      "TN93 - optimized",  # TN93
+                      "GTR - optimized",  # GTR
+                      "ssGN - optimized",  # ssGN
                       "paralinear",
                       "percent",
                       "identity",
@@ -2612,7 +2612,6 @@ class MainWindow:
         self.bootscan_settings_ui.comboBox_distance_model.clear()
         for model in dna_models:
             self.bootscan_settings_ui.comboBox_distance_model.addItem(model)
-
 
     def update_bootscan_settings(self):
         old_settings = self.bootscan_instance.get_settings()
@@ -2694,14 +2693,13 @@ class MainWindow:
             self.ui.comboBox_ref2.addItem(seq)
             self.ui.comboBox_outgroup.addItem(seq)
 
-
     ##########################################################################
 
     def show(self):
         self.main_win.show()
 
 
-#todo webenginepage
+# todo webenginepage
 
 # class WebEnginePage(QtWebEngineWidgets.QWebEnginePage):
 #     def __init__(self, *args, **kwargs):
@@ -2787,12 +2785,14 @@ class Worker_recomb(QObject):
             if outpath != "":
                 copyfile(temp_file, outpath)
 
+
 class Worker_simplot(QObject):
     finished = pyqtSignal()
     return_result = pyqtSignal(dict)
     update_progress_bar = pyqtSignal(int)
     process_stopped = pyqtSignal()
-    #update_canvas = pyqtSignal(dict)
+
+    # update_canvas = pyqtSignal(dict)
 
     def __init__(self, instance, settings, output, canvas, run_status, status_label):
         super().__init__()
@@ -2844,7 +2844,7 @@ class Worker_simplot(QObject):
             start_pos = 0
             dist_dict = None
             while start_pos + window_length < seq_length and self.run_status.get_status():
-                self.status_label.setText(f"SimPlot: Completed {int((i/(iter-1))*100)} % of windows")
+                self.status_label.setText(f"SimPlot: Completed {int((i / (iter - 1)) * 100)} % of windows")
                 dist_dict = self.instance.get_all_distances(start_pos, dist_dict, multiproc=False)
                 start_pos += step
                 if refresh_rate is not None and plot_progress and i % refresh_rate == 0 and network_analysis is False and distance_recomb is False:
@@ -2865,7 +2865,6 @@ class Worker_simplot(QObject):
                 else:
                     dist_dict[group] = 1 - df
 
-
                 if group in df.index:
                     dist_dict[group] = dist_dict[group].drop(group, axis=0)
 
@@ -2881,7 +2880,6 @@ class Worker_simplot(QObject):
             self.update_progress_bar.emit(0)
 
         self.finished.emit()
-
 
     def min_max_normalization(self, df):
         column_maxes = df.max()
@@ -2910,9 +2908,9 @@ class Worker_simplot(QObject):
         self.status_label.setText(f"Initializing the ProcessPool with {nprocs} cores")
         with ProcessPoolExecutor(max_workers=nprocs) as executor:
             for num, factors in zip(start_pos_list, executor.map(self.instance.get_all_distances, start_pos_list)):
-                self.update_progress_bar.emit(int((i / len(start_pos_list) * 90)+5))
+                self.update_progress_bar.emit(int((i / len(start_pos_list) * 90) + 5))
                 if self.run_status.get_status():
-                    self.status_label.setText(f"SimPlot: completed {int((i / len(start_pos_list))*100)} % of windows")
+                    self.status_label.setText(f"SimPlot: completed {int((i / len(start_pos_list)) * 100)} % of windows")
                 i += 1
                 result_dict[num] = factors
         return result_dict
@@ -2945,13 +2943,15 @@ class Worker_simplot(QObject):
             self.simplot_canvas.flush_events()
             plt.pause(0.05)
 
+
 class Worker_bootscan(QObject):
     finished = pyqtSignal()
     progress = pyqtSignal(int)
     return_result = pyqtSignal(dict)
     update_progress_bar = pyqtSignal(int)
     process_stopped = pyqtSignal()
-    #update_canvas = pyqtSignal(dict)
+
+    # update_canvas = pyqtSignal(dict)
 
     def __init__(self, instance, settings, canvas, run_status, status_label):
         super().__init__()
@@ -2985,7 +2985,7 @@ class Worker_bootscan(QObject):
             dist_dict = None
             while start_pos + window_length < seq_length and self.run_status.get_status():
                 dist_dict = self.instance.compute_bootscan(start_pos, dist_dict, multiproc=False)
-                self.status_label.setText(f"SimPlot: Completed {int((i/(iter-1))*100)} % of windows")
+                self.status_label.setText(f"SimPlot: Completed {int((i / (iter - 1)) * 100)} % of windows")
                 start_pos += step
                 plot_progress = True
                 if refresh_rate is not None and plot_progress and i % refresh_rate == 0:
@@ -3042,13 +3042,14 @@ class Worker_bootscan(QObject):
 
         with ProcessPoolExecutor(max_workers=nprocs) as executor:
             for num, occur_dict in zip(start_pos_list,
-                                    executor.map(self.instance.compute_bootscan, start_pos_list)):
+                                       executor.map(self.instance.compute_bootscan, start_pos_list)):
                 result_dict = self.instance.update_result_dict(occur_dict, num, result_dict)
                 self.update_progress_bar.emit(int((i / len(start_pos_list) * 90) + 5))
                 if self.run_status.get_status():
-                    self.status_label.setText(f"BootScan: completed {int((i / len(start_pos_list))*100)} % of windows")
+                    self.status_label.setText(
+                        f"BootScan: completed {int((i / len(start_pos_list)) * 100)} % of windows")
                 i += 1
-                #result_dict[num] = occur_dict
+                # result_dict[num] = occur_dict
         return result_dict
 
     def calculate_all_start_pos(self, window_length, seq_length, step):
@@ -3065,7 +3066,8 @@ class MyWindow(QMainWindow):
     def closeEvent(self, event):
         reply = QtWidgets.QMessageBox.question(self, 'Quit', 'Are you sure you want to quit?\n'
                                                              'Unsaved groups and results will be lost.',
-                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No, QtWidgets.QMessageBox.No)
+                                               QtWidgets.QMessageBox.Yes | QtWidgets.QMessageBox.No,
+                                               QtWidgets.QMessageBox.No)
         if reply == QtWidgets.QMessageBox.Yes:
             event.accept()
         else:
@@ -3081,8 +3083,9 @@ def kill_workers():
     else:
         return
 
+
 if __name__ == "__main__":
-    #os.chdir(sys.path[0])
+    # os.chdir(sys.path[0])
     freeze_support()
     app = QApplication(sys.argv)
     app.aboutToQuit.connect(kill_workers)

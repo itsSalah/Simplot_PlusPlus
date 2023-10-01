@@ -249,11 +249,11 @@ def add_widgets(plot, graph_global_edge, graph_renderer_global, graph_renderer_l
 def plot_bokeh(graph_global_edge, graph_local_edge, seq_length, step, model_settings_dict, recombination_df, save_as_svg):
     # create plot
     if save_as_svg:
-        plot = Plot(plot_width=1000, plot_height=1000,
+        plot = Plot(width=1000, height=1000,
                     x_range=Range1d(-1.1, 1.1), y_range=Range1d(-1.1, 1.1),
                     toolbar_location="above", output_backend="svg")
     else:
-        plot = Plot(plot_width=1000, plot_height=1000,
+        plot = Plot(width=1000, height=1000,
                     x_range=Range1d(-1.1, 1.1), y_range=Range1d(-1.1, 1.1),
                     toolbar_location="above")
 
