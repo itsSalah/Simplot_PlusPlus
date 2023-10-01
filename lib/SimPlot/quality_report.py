@@ -5,7 +5,7 @@ from bokeh.plotting import figure
 from bokeh.models import (BasicTicker, ColorBar, ColumnDataSource,
                           LinearColorMapper, PrintfTickFormatter, Legend, ContinuousTicker)
 from bokeh.transform import dodge, factor_cmap
-from bokeh.models import Panel, Tabs, Div
+from bokeh.models import TabPanel, Tabs, Div
 from bokeh.models import (
     ColumnDataSource,
     HoverTool,
@@ -43,14 +43,14 @@ class quality_report_generator:
         print ('done')
 
     def plots_formatting(self, gap_report_plot, threshold_breach_plot, missing_data_plot, distance_plot, refseq_select_widget):
-        tab1 = Panel(child=gap_report_plot, title="Gap frequency")
-        tab2 = Panel(child=threshold_breach_plot, title="Gap threshold cutoff")
+        tab1 = TabPanel(child=gap_report_plot, title="Gap frequency")
+        tab2 = TabPanel(child=threshold_breach_plot, title="Gap threshold cutoff")
         plot1 = (Tabs(tabs=[tab1, tab2]))
 
         black_line0 = Div(text="<hr/>", style={'width': '100%', 'text-align': 'left', 'margin-left': '0'})
 
-        tab3 = Panel(child=missing_data_plot, title="Data completedness")
-        tab4 = Panel(child=distance_plot, title="Distance plot")
+        tab3 = TabPanel(child=missing_data_plot, title="Data completedness")
+        tab4 = TabPanel(child=distance_plot, title="Distance plot")
         plot2 = (column(refseq_select_widget, Tabs(tabs=[tab3, tab4])))
 
         plots = column(plot1,black_line0, plot2)
@@ -185,8 +185,8 @@ class quality_report_generator:
         p.background_fill_color = None
         p.border_fill_color = None
 
-        # tab1 = Panel(child=p, title="Data completedness")
-        # tab2 = Panel(child=distance_plot, title="distance plot")
+        # tab1 = TabPanel(child=p, title="Data completedness")
+        # tab2 = TabPanel(child=distance_plot, title="distance plot")
         #show(column(refseq_select, Tabs(tabs=[tab1, tab2])))
         return p, distance_plot, refseq_select
 
