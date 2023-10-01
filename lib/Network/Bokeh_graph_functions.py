@@ -17,10 +17,10 @@ def create_settings_label_text(model_settings_dict):
     gap_penalty_models = ["Hamming", "Jukes-Cantor"]
     param_a_models = ["JinNeiGamma"]
 
-    text = "<b><u>Model Parameters</u></b>" + '</br>'\
-            f"<b>model</b>: {model_settings_dict['model']} " + \
-            f" <b>window length</b>: {model_settings_dict['window']}, " +\
-            f" <b>step</b>: {model_settings_dict['step']}"
+    text = "<b><u>Model Parameters</u></b>" + '</br>' \
+                                              f"<b>model</b>: {model_settings_dict['model']} " + \
+           f" <b>window length</b>: {model_settings_dict['window']}, " + \
+           f" <b>step</b>: {model_settings_dict['step']}"
 
     if model_settings_dict['model'] in param_a_models:
         if model_settings_dict['param_a'] is None:
@@ -31,14 +31,12 @@ def create_settings_label_text(model_settings_dict):
     if model_settings_dict['model'] in gap_penalty_models:
         text = text + f" <b>gap value</b>: {model_settings_dict['gap']}"
 
-    if  model_settings_dict["gap_treshold"] is not None:
+    if model_settings_dict["gap_treshold"] is not None:
         text = text + f" <b>gap threshold</b>: {model_settings_dict['gap_treshold']}"
     else:
         text = text + f" <b>gap threshold</b>: N/A"
 
     return text
-
-
 
 
 def get_color_palette_dicts():
@@ -140,15 +138,31 @@ def add_labels(plot, graph_renderer_global):
 
 
 def create_renderer(graph_global_edge, graph_local_edge, plot):
-    graph_global = from_networkx(graph_global_edge, nx.circular_layout, scale=1, center=(0, 0))  # nx.spring_layout
+    layout_positions = nx.circular_layout(graph_global_edge)
+
+    # Modify the node labels to remove characters
+    modified_positions = {}
+    for i, (node, position) in enumerate(layout_positions.items()):
+        modified_node = i
+        modified_positions[modified_node] = position
+
+    graph_global = from_networkx(graph_global_edge, modified_positions, scale=1, center=(0, 0))  # nx.spring_layout
     graph_global.node_renderer.glyph = Circle(size=15, fill_color='color')  # Spectral4[0]
     graph_global.edge_renderer.glyph = MultiLine(line_color="color", line_alpha="line_alpha", line_width="weight",
                                                  line_dash='solid')
 
-    graph_local = from_networkx(graph_local_edge, nx.circular_layout, scale=1, center=(0, 0))  # nx.spring_layout
+    layout_positions = nx.circular_layout(graph_local_edge)
+
+    # Modify the node labels to remove characters
+    modified_positions = {}
+    for i, (node, position) in enumerate(layout_positions.items()):
+        modified_node = i
+        modified_positions[modified_node] = position
+
+    graph_local = from_networkx(graph_local_edge, modified_positions, scale=1, center=(0, 0))  # nx.spring_layout
     graph_local.node_renderer.glyph = Circle(size=15, fill_color='color')  # Spectral4[0]
     graph_local.edge_renderer.glyph = MultiLine(line_color="color", line_alpha="line_alpha", line_width="weight",
-                                                line_dash='dotted') #dotted
+                                                line_dash='dotted')  # dotted
 
     return plot, graph_global, graph_local
 
@@ -175,17 +189,14 @@ def add_widgets(plot, graph_global_edge, graph_renderer_global, graph_renderer_l
     local_threshold_slider = Slider(start=0, end=100, value=90, step=1, title="Local similarity threshold (%)",
                                     name="local_threshold_slider")
 
-
     global_columns = [
         TableColumn(field="start", title="Group 1", width=100),
         TableColumn(field="end", title="Group 2", width=100),
         TableColumn(field="sim_type", title="Similarity type", width=50),
         TableColumn(field="similarity", title="Similarity (%)", width=10000)
     ]
-    global_info_table = DataTable(source=graph_renderer_global.edge_renderer.data_source, columns=global_columns, width=600,
-                               height=250, fit_columns=False, selectable=True)
-
-
+    global_info_table = DataTable(source=graph_renderer_global.edge_renderer.data_source, columns=global_columns,
+                                  width=600, height=250, fit_columns=False, selectable=True)
 
     local_columns = [
         TableColumn(field="start", title="Group 1", width=100),
@@ -193,11 +204,14 @@ def add_widgets(plot, graph_global_edge, graph_renderer_global, graph_renderer_l
         TableColumn(field="sim_type", title="Similarity type", width=50),
         TableColumn(field="pos_range", title="Similarity ranges", width=10000)
     ]
-    local_info_datatable = DataTable(source=graph_renderer_local.edge_renderer.data_source, columns=local_columns, width=600,
-                               height=250, fit_columns=False, selectable=True)  # , selectable=True, fit_columns=False
+    local_info_datatable = DataTable(source=graph_renderer_local.edge_renderer.data_source, columns=local_columns,
+                                     width=600,
+                                     height=250, fit_columns=False,
+                                     selectable=True)  # , selectable=True, fit_columns=False
 
     columns_recombination_df = [TableColumn(field=Ci, title=Ci) for Ci in recombination_df.columns]  # bokeh columns
-    recombination_data_table = DataTable(columns=columns_recombination_df, source=ColumnDataSource(recombination_df.head(10)), height=250)  # bokeh table
+    recombination_data_table = DataTable(columns=columns_recombination_df,
+                                         source=ColumnDataSource(recombination_df.head(10)), height=250)  # bokeh table
 
     global_datatable_label = Div(text="<b><u>Global similarities intervals</u></b>")
     local_datatable_label = Div(text="<b><u>Intervals of local similarities</u></b>")
@@ -224,7 +238,7 @@ def add_widgets(plot, graph_global_edge, graph_renderer_global, graph_renderer_l
                                        reds101_dict=reds101_dict,
                                        gray101_dict=gray101_dict,
                                        step=step,
-                                       window_length = model_settings_dict['window'],
+                                       window_length=model_settings_dict['window'],
                                        tap_selected=graph_renderer_global.node_renderer.data_source.selected),
                              code=code_multichoice)
 
@@ -239,14 +253,18 @@ def add_widgets(plot, graph_global_edge, graph_renderer_global, graph_renderer_l
     plot.js_on_event('tap', main_callback)
 
     plot_with_widget = column(row(column(plot, settings_label, multichoice),
-                              column(global_settings_label, global_sim_checkbox, global_threshold_slider, global_datatable_label, global_info_table, black_line1,
-                                     local_settings_label, local_sim_checkbox, local_threshold_slider, range_slider, black_line2,
-                                     local_datatable_label, local_info_datatable, black_line0, recombination_label, recombination_data_table)))
+                                  column(global_settings_label, global_sim_checkbox, global_threshold_slider,
+                                         global_datatable_label, global_info_table, black_line1,
+                                         local_settings_label, local_sim_checkbox, local_threshold_slider, range_slider,
+                                         black_line2,
+                                         local_datatable_label, local_info_datatable, black_line0, recombination_label,
+                                         recombination_data_table)))
 
     return plot_with_widget
 
 
-def plot_bokeh(graph_global_edge, graph_local_edge, seq_length, step, model_settings_dict, recombination_df, save_as_svg):
+def plot_bokeh(graph_global_edge, graph_local_edge, seq_length, step, model_settings_dict, recombination_df,
+               save_as_svg):
     # create plot
     if save_as_svg:
         plot = Plot(width=1000, height=1000,
@@ -263,10 +281,8 @@ def plot_bokeh(graph_global_edge, graph_local_edge, seq_length, step, model_sett
     # add tools
     node_hover_tool = HoverTool(tooltips=[("index", "@index")])
     plot.add_tools(node_hover_tool, BoxZoomTool(), ResetTool(), PanTool(), TapTool(), SaveTool())
-
     # create renderers
     plot, graph_renderer_global, graph_renderer_local = create_renderer(graph_global_edge, graph_local_edge, plot)
-
     plot, graph_renderer_local = add_curved_local_edges(plot, graph_renderer_local)
     plot, graph_renderer_global = add_curved_local_edges(plot, graph_renderer_global)
 
