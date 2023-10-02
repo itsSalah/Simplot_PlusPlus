@@ -92,7 +92,18 @@ Assuming Python 3.8 or higher is installed on the machine, the script should run
 3. Install the required libraries using `pip install -r requirements.txt`.
 4. Launch SimPlot++ using `python3 main.py`.
 
-## Linux UNIX and Mac OS versions
+<u>Here is an example of how to run the script in MacOS:</u>
+1. After downloading the source code, go to the folder containing `main.py`.
+2. Create a new virtual environment (venv) in your terminal using `python3 -m venv SimPlot++_venv `.
+The steps 3,4,5 are caused by an issue on MacOS that prevents the installation of PyQt5 using pip (so we will use brew instead). 
+3. Inside the `SimPlot++_venv` folder, you will find a `pyvenv.cfg` and change `include-system-site-packages = false` to `include-system-site-packages = true`.
+4. Inside your terminal run `brew install pyqt5`
+5. Open the requirements.txt file and change the line `PyQt5==5.15.9` to `#PyQt5==5.15.9`
+6. Install the required libraries using `pip install -r requirements.txt`.
+7. Launch SimPlot++ using `python3 main.py`.
+
+
+## Linux UNIX
 SimPlot++ is available as a Python script.
 
 ### Python script
