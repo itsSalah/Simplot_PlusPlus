@@ -92,6 +92,8 @@ Assuming Python 3.8 or higher is installed on the machine, the script should run
 3. Install the required libraries using `pip install -r requirements.txt`.
 4. Launch SimPlot++ using `python3 main.py`.
 
+
+## MacOS version
 <u>Here is an example of how to run the script in MacOS:</u>
 1. After downloading the source code, go to the folder containing `main.py`.
 2. Create a new virtual environment (venv) in your terminal using `python3 -m venv SimPlot++_venv `.
